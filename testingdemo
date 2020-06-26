@@ -1,0 +1,102 @@
+//justa simple demo to see how we create some. function and test the result in Unit testing
+//and widget testing
+
+//main.dart
+import 'package:flutter/material.dart';
+ 
+void main() {
+ runApp(MyApp()); 
+} 
+
+//for unit testing
+class MyCalc {
+  static int calc(int number) {
+    return number * 2;
+  }
+
+}
+
+//for widget testing
+//I just create a simple widget called "MyWidget"
+class MyWidget extends StatelessWidget {
+  final String title;
+  final String message;
+
+  const MyWidget({
+    Key key,
+    @required this.title,
+    @required this.message,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body:Container(
+          child: Text(message),
+        ),
+    );
+  }
+}
+//===
+
+
+ 
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Material App',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Material App Bar'),
+        ),
+        body: Center(
+          child: Container(
+            child: Text('Hello World'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+//in the test folder
+// folder test/myunit_test.dart
+import 'package:flutter_test/flutter_test.dart';
+
+import '../lib/main.dart';
+
+void main() {
+//testscript 1
+  test('My Testing for wrong value', () {
+    var result = MyCalc.calc(10);
+    expect(result, 1);
+  });
+
+//testscript 2
+  test('My Testing for right value', () {
+    var result = MyCalc.calc(10);
+    expect(result, 20);
+  });
+}
+
+
+// folder test/mywidget_test.dart
+import 'package:flutter_test/flutter_test.dart';
+import '../lib/main.dart';
+
+void main() {
+  //testscript 1
+  testWidgets('Test if MyWidget has correct title and message',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MyWidget(title: 'hello', message: 'world'));
+    final titleFinder = find.text('hello');
+    final messageFinder = find.text('world');
+
+    // Use the `findsOneWidget` matcher to verify
+    // that the Text widgets appear in the widget tree.
+    expect(titleFinder, findsOneWidget);
+    expect(messageFinder, findsOneWidget);
+  });
+}
